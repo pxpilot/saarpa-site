@@ -1,62 +1,176 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import PostCard from '../components/PostCard.astro';
-import { getCollection } from 'astro:content';
-
-// Fetch all collections
-const allPages = await getCollection('pages');
-const allNews = await getCollection('news');
-const allWork = await getCollection('work');
-const allSold = await getCollection('sold');
-
-// Combine for filtering
-const allContent = [...allPages, ...allNews, ...allWork, ...allSold];
-
-// Filter for pagetype containing 'main' and sort by number
-const posts = allContent.filter(item => {
-    return item.data.pagetype && item.data.pagetype.includes('main');
-}).sort((a, b) => {
-    const numA = a.data.number || 9999;
-    const numB = b.data.number || 9999;
-    return numA - numB;
-});
-
-// Get index-page metadata (from pages collection)
-const indexPage = allPages.find(p => p.slug === 'index');
-const title = indexPage?.data.title || 'Clay';
-const description = indexPage?.data.description;
-
-let postCounter = 0;
 ---
 
-<Layout title={title} description={description}>
-    <div class="post-feed">
-        {posts.map((post) => {
-            postCounter++;
-            // Calculate slug. If it's from 'pages', slug is just slug (or flattened).
-            // content/pages/bio.md -> slug 'bio'.
-            // content/work/work-1.md -> slug 'work-1'? No, in config.ts, work collection.
-            // But legacy mapped work/work-1.md -> /work/work-1
-            // My [...slug].astro will handle mapping.
-            // Here I need to generate the same link.
-
-            let slug = post.slug;
-            if (post.collection === 'work') slug = `work/${post.slug}`;
-            if (post.collection === 'news') slug = `news/${post.slug}`;
-            if (post.collection === 'sold') slug = `sold/${post.slug}`;
-            // Pages collection: 'bio' -> 'bio'.
-
-            // Wait, legacy slug split logic:
-            // src/pages/bio/index.md -> /bio.
-            // content/work/work-1.md -> /work/work-1.
-
-            return (
-                <PostCard
-                    count={postCounter}
-                    post={post}
-                    slug={slug}
-                />
-            );
-        })}
+<Layout title="Saar Paamoni" description="Product advisor, artist, builder.">
+    <div class="home-hero">
+        <div class="home-hero-content">
+            <h1 class="home-title">Saar Paamoni</h1>
+            <p class="home-tagline">Product leader. Artist. Builder. Dad. Surfer.</p>
+            <p class="home-bio">
+                10 years building measurement infrastructure at scale. Now advising
+                founders and operators — and making art somewhere in between.
+            </p>
+            <div class="home-ctas">
+                <a href="/consulting" class="btn btn-primary">Work with me</a>
+                <a href="/art" class="btn btn-secondary">View my art</a>
+            </div>
+        </div>
     </div>
+
+    <section class="home-section">
+        <div class="home-section-inner">
+            <div class="home-card">
+                <span class="home-card-label">Currently building</span>
+                <p class="home-card-text">
+                    Exploring how AI is reshaping the relationship between attention,
+                    reach, and impact across media. Stealth for now.
+                </p>
+                <a href="/consulting" class="home-card-link">Learn more →</a>
+            </div>
+            <div class="home-card">
+                <span class="home-card-label">Art</span>
+                <p class="home-card-text">
+                    Acrylic on canvas. Painting is how I think without language —
+                    bold strokes, warm palettes, textures that take time.
+                </p>
+                <a href="/art" class="home-card-link">View gallery →</a>
+            </div>
+            <div class="home-card">
+                <span class="home-card-label">Writing</span>
+                <p class="home-card-text">
+                    Notes on product, AI, media, and what I'm figuring out
+                    in public.
+                </p>
+                <a href="/blog" class="home-card-link">Read posts →</a>
+            </div>
+        </div>
+    </section>
 </Layout>
+
+<style>
+.home-hero {
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    padding: 6rem var(--margin) 4rem;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.home-title {
+    font-family: var(--font-sans-serif);
+    font-variant: small-caps;
+    font-size: clamp(3rem, 8vw, 7rem);
+    font-weight: var(--font-light);
+    letter-spacing: 0.05em;
+    color: var(--color-base);
+    margin: 0 0 0.5rem;
+    line-height: 1;
+}
+
+.home-tagline {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 1.6rem;
+    color: var(--color-primary);
+    margin: 0 0 1.5rem;
+}
+
+.home-bio {
+    font-family: var(--font-serif);
+    font-size: 1.35rem;
+    line-height: 1.7;
+    color: var(--color-base);
+    max-width: 600px;
+    margin: 0 0 2.5rem;
+    opacity: 0.85;
+}
+
+.home-ctas {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.btn {
+    display: inline-block;
+    padding: 0.8rem 2rem;
+    font-family: var(--font-sans-serif);
+    font-size: 0.9rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: var(--radius);
+    transition: all 0.2s ease;
+}
+
+.btn-primary {
+    background: var(--color-primary);
+    color: #FFF8F1;
+}
+
+.btn-primary:hover {
+    background: var(--color-base);
+    color: var(--color-bg);
+}
+
+.btn-secondary {
+    background: transparent;
+    color: var(--color-base);
+    border: 1px solid var(--color-border);
+}
+
+.btn-secondary:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+}
+
+.home-section {
+    padding: 2rem var(--margin) 6rem;
+    border-top: 1px solid var(--color-border);
+}
+
+.home-section-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 2rem;
+}
+
+.home-card {
+    padding: 2rem 0;
+    border-top: 2px solid var(--color-primary);
+}
+
+.home-card-label {
+    display: block;
+    font-family: var(--font-sans-serif);
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--color-primary);
+    margin-bottom: 0.75rem;
+}
+
+.home-card-text {
+    font-family: var(--font-serif);
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: var(--color-base);
+    margin: 0 0 1rem;
+}
+
+.home-card-link {
+    font-family: var(--font-sans-serif);
+    font-size: 0.85rem;
+    color: var(--color-primary);
+    text-decoration: none;
+    letter-spacing: 0.05em;
+}
+
+.home-card-link:hover {
+    text-decoration: underline;
+}
+</style>

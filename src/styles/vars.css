@@ -8,11 +8,12 @@
 
 :root {
 
-    /* Colours */
-    --color-primary: #3eb0ef;
-    --color-base: #131313;
-    --color-border: #ddd;
-    --color-bg: #ffffff;
+    /* Colours — saarpa.com brand */
+    --color-primary: #8B2635;    /* burgundy accent */
+    --color-base: #5B4D43;       /* warm brown text */
+    --color-border: #e0cfbe;     /* warm border */
+    --color-bg: #FFF8F1;         /* cream background */
+    --color-accent: #8B2635;
 
     /* Fonts */
     --font-sans-serif: 'Futura', 'League Spartan', 'Trebuchet MS', Arial, sans-serif;
@@ -38,11 +39,9 @@
 }
 
 [data-theme='dark'] {
-    --color-primary: #5ec2ff;
-    --color-base: #e0e0e0;
-    --color-border: #444;
-    --color-bg: #121212;
-
-
-    /* Old BG--color-bg: #f8f8f8;*/
+    --color-primary: #c4697a;    /* softer burgundy on dark */
+    --color-base: #e0d6cf;       /* warm off-white text */
+    --color-border: #4a3f36;
+    --color-bg: #1a1210;         /* very dark warm brown */
+    --color-accent: #c4697a;
 }

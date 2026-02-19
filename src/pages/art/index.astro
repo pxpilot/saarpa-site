@@ -1,0 +1,30 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import PostCard from '../../components/PostCard.astro';
+import { getCollection } from 'astro:content';
+
+const works = await getCollection('work');
+const sorted = works.sort((a, b) =>
+    new Date(b.data.date || 0).getTime() - new Date(a.data.date || 0).getTime()
+);
+
+let counter = 0;
+---
+
+<Layout title="Art" description="Acrylic on canvas — paintings by Saar Paamoni.">
+    <header class="page-head">
+        <h2 class="page-head-title">Acrylic on canvas.</h2>
+    </header>
+    <div class="post-feed">
+        {sorted.map((post) => {
+            counter++;
+            return (
+                <PostCard
+                    count={counter}
+                    post={post}
+                    slug={`art/${post.slug}`}
+                />
+            );
+        })}
+    </div>
+</Layout>

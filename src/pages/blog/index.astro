@@ -1,0 +1,30 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import PostCard from '../../components/PostCard.astro';
+import { getCollection } from 'astro:content';
+
+const posts = await getCollection('news');
+const sorted = posts.sort((a, b) =>
+    new Date(b.data.date || 0).getTime() - new Date(a.data.date || 0).getTime()
+);
+
+let counter = 0;
+---
+
+<Layout title="Blog" description="Notes on product, AI, media, and what I'm figuring out in public.">
+    <header class="page-head">
+        <h2 class="page-head-title">Notes on product, AI, and building.</h2>
+    </header>
+    <div class="post-feed">
+        {sorted.map((post) => {
+            counter++;
+            return (
+                <PostCard
+                    count={counter}
+                    post={post}
+                    slug={`blog/${post.slug}`}
+                />
+            );
+        })}
+    </div>
+</Layout>

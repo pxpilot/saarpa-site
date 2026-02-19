@@ -1,0 +1,174 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Contact" description="Get in touch with Saar Paamoni.">
+    <article class="post-content no-image">
+        <div class="post-content-body contact-body">
+            <h1 class="contact-title">Get in touch</h1>
+            <p class="contact-lead">
+                Whether you're building something, want to explore working together,
+                or just want to say hello — I'm easy to reach.
+            </p>
+
+            <!-- Replace YOUR_FORM_ID below with your Formspree form ID after signing up at formspree.io -->
+            <form
+                action="https://formspree.io/f/YOUR_FORM_ID"
+                method="POST"
+                class="contact-form"
+            >
+                <div class="form-field">
+                    <label for="name">Name</label>
+                    <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        placeholder="Your name"
+                        required
+                    />
+                </div>
+
+                <div class="form-field">
+                    <label for="email">Email</label>
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder="your@email.com"
+                        required
+                    />
+                </div>
+
+                <div class="form-field">
+                    <label for="message">Message</label>
+                    <textarea
+                        id="message"
+                        name="message"
+                        placeholder="What's on your mind?"
+                        rows="6"
+                        required
+                    ></textarea>
+                </div>
+
+                <!-- Honeypot field — stops bots -->
+                <input type="text" name="_gotcha" style="display:none" />
+
+                <button type="submit" class="contact-submit">Send message →</button>
+            </form>
+
+            <p class="contact-alt">
+                Or email me directly at
+                <a href="mailto:saar@paamoni.com">saar@paamoni.com</a>
+            </p>
+        </div>
+    </article>
+</Layout>
+
+<style>
+.contact-body {
+    max-width: 580px;
+    margin: 0 auto;
+    padding: 4rem var(--margin);
+}
+
+.contact-title {
+    font-family: var(--font-sans-serif);
+    font-variant: small-caps;
+    font-weight: var(--font-light);
+    font-size: 4rem;
+    letter-spacing: 0.05em;
+    color: var(--color-base);
+    margin: 0 0 1rem;
+}
+
+.contact-lead {
+    font-family: var(--font-serif);
+    font-size: 1.2rem;
+    line-height: 1.65;
+    color: var(--color-base);
+    opacity: 0.8;
+    margin: 0 0 3rem;
+}
+
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.form-field label {
+    font-family: var(--font-sans-serif);
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-base);
+    opacity: 0.6;
+}
+
+.form-field input,
+.form-field textarea {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    font-family: var(--font-serif);
+    font-size: 1rem;
+    color: var(--color-base);
+    transition: border-color 0.2s ease;
+    box-sizing: border-box;
+}
+
+.form-field input:focus,
+.form-field textarea:focus {
+    outline: none;
+    border-color: var(--color-primary);
+}
+
+.form-field textarea {
+    resize: vertical;
+    min-height: 140px;
+}
+
+.contact-submit {
+    align-self: flex-start;
+    padding: 0.85rem 2rem;
+    background: var(--color-primary);
+    color: #FFF8F1;
+    border: none;
+    border-radius: var(--radius);
+    font-family: var(--font-sans-serif);
+    font-size: 0.9rem;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    margin-top: 0.5rem;
+}
+
+.contact-submit:hover {
+    background: var(--color-base);
+}
+
+.contact-alt {
+    font-family: var(--font-serif);
+    font-size: 0.95rem;
+    color: var(--color-base);
+    opacity: 0.6;
+    margin-top: 2rem;
+}
+
+.contact-alt a {
+    color: var(--color-primary);
+    text-decoration: none;
+}
+
+.contact-alt a:hover {
+    text-decoration: underline;
+}
+</style>

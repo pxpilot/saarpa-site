@@ -1,0 +1,22 @@
+# Astro build output
+dist/
+.astro/
+
+# Node
+node_modules/
+
+# Env
+.env
+.env.*
+!.env.example
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+
+# Decap CMS local proxy
+.netlify/

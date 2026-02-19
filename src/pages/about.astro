@@ -1,0 +1,119 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="About" description="Saar Paamoni — Product leader, artist, surfer, builder, dad.">
+    <article class="post-content no-image">
+        <div class="post-content-body about-body">
+            <h1 class="about-title">About</h1>
+
+            <p class="about-lead">
+                Product leader, artist, surfer, builder, dad —
+                not necessarily in that order.
+            </p>
+
+            <p>
+                I spent a decade as VP Product at DoubleVerify, where I led measurement
+                and verification products across CTV, display, video, and mobile — at a scale
+                of billions of signals per day. I've worked across the full ad ecosystem:
+                DSPs, SSPs, publishers, agencies, and standards bodies (IAB, MRC). I know
+                where the bodies are buried, and where the real opportunities are being missed.
+            </p>
+
+            <p>
+                Now I advise founders and operators building at the intersection of AI, media,
+                and measurement — and I'm quietly building something of my own.
+            </p>
+
+            <h2>Making things</h2>
+            <p>
+                Outside of product work, I paint. Acrylic on canvas, mostly — bold,
+                textured, warm. Painting is my way of thinking without language. It's
+                what I do when I want to be fully present without an agenda.
+            </p>
+            <p>
+                I also surf, badly and happily, whenever the opportunity arises.
+            </p>
+
+            <h2>Where I'm at</h2>
+            <p>
+                Based in Israel. Spending a lot of time thinking about how AI is
+                reshaping how brands and publishers understand real audience engagement.
+                More on that soon.
+            </p>
+
+            <div class="about-links">
+                <a href="/consulting">Work with me →</a>
+                <a href="/art">See my art →</a>
+                <a href="/contact">Get in touch →</a>
+            </div>
+        </div>
+    </article>
+</Layout>
+
+<style>
+.about-body {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 4rem var(--margin);
+}
+
+.about-title {
+    font-family: var(--font-sans-serif);
+    font-variant: small-caps;
+    font-weight: var(--font-light);
+    font-size: 4rem;
+    letter-spacing: 0.05em;
+    color: var(--color-base);
+    margin: 0 0 1.5rem;
+}
+
+.about-lead {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 1.5rem;
+    line-height: 1.5;
+    color: var(--color-primary);
+    margin-bottom: 2rem;
+}
+
+.about-body p {
+    font-family: var(--font-serif);
+    font-size: 1.15rem;
+    line-height: 1.75;
+    color: var(--color-base);
+    margin-bottom: 1.5rem;
+}
+
+.about-body h2 {
+    font-family: var(--font-sans-serif);
+    font-variant: small-caps;
+    font-weight: var(--font-normal);
+    font-size: 1.2rem;
+    letter-spacing: 0.1em;
+    color: var(--color-primary);
+    margin: 2.5rem 0 0.75rem;
+    text-transform: lowercase;
+}
+
+.about-links {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--color-border);
+}
+
+.about-links a {
+    font-family: var(--font-sans-serif);
+    font-size: 0.9rem;
+    color: var(--color-primary);
+    text-decoration: none;
+    letter-spacing: 0.05em;
+}
+
+.about-links a:hover {
+    text-decoration: underline;
+}
+</style>

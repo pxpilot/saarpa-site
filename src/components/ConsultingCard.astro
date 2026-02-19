@@ -1,0 +1,48 @@
+---
+export interface Props {
+    title: string;
+    body: string;
+}
+
+const { title, body } = Astro.props;
+---
+
+<div class="consulting-card">
+    <h3 class="consulting-card-title">{title}</h3>
+    <p class="consulting-card-body">{body}</p>
+</div>
+
+<style>
+.consulting-card {
+    padding: 2rem;
+    border: 1px solid var(--color-border);
+    border-top: 3px solid var(--color-primary);
+    border-radius: var(--radius);
+    background: var(--color-bg);
+    transition: border-top-color 0.2s ease;
+}
+
+.consulting-card:hover {
+    border-top-color: var(--color-base);
+}
+
+.consulting-card-title {
+    font-family: var(--font-sans-serif);
+    font-variant: small-caps;
+    font-weight: var(--font-normal);
+    font-size: 1.1rem;
+    letter-spacing: 0.08em;
+    color: var(--color-base);
+    margin: 0 0 0.75rem;
+    text-transform: lowercase;
+}
+
+.consulting-card-body {
+    font-family: var(--font-serif);
+    font-size: 1rem;
+    line-height: 1.65;
+    color: var(--color-base);
+    opacity: 0.85;
+    margin: 0;
+}
+</style>
