@@ -7,15 +7,20 @@ export interface Props {
 
 const { count, post, slug } = Astro.props;
 const thumbnail = post.data.thumbnail;
+const video = post.data.video;
 const title = post.data.title;
 const isLarge = count % 3 === 0;
 
-// Construct background image style
+const hasMedia = !!(thumbnail || video);
+// Construct background image style (only for image thumbnails)
 const bgStyle = thumbnail ? `background-image: url(${thumbnail});` : '';
-const postClass = `post-card ${isLarge ? 'post-card-large' : ''} ${thumbnail ? 'with-image' : 'no-image'} post`;
+const postClass = `post-card ${isLarge ? 'post-card-large' : ''} ${hasMedia ? 'with-image' : 'no-image'} post`;
 ---
 
 <article class={postClass} style={bgStyle}>
+  {video && (
+    <video class="post-card-video" src={video} autoplay muted loop playsinline />
+  )}
   <a href={`/${slug}`} class="post-card-link">
     <div class="post-card-content">
       <h2 class="post-card-title">
@@ -26,13 +31,22 @@ const postClass = `post-card ${isLarge ? 'post-card-large' : ''} ${thumbnail ? '
 </article>
 
 <style>
+.post-card-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+
 /* Post Feed */
 .post-card {
   position: relative;
   flex: 1 0 auto;
   display: flex;
   position: relative;
-  height: 35vw;
+  height: 4.5vw;
   background: linear-gradient(135deg, #1f1f1f 0%, #111 100%) center center;
   background-size: cover;
   overflow: hidden;
@@ -44,7 +58,7 @@ const postClass = `post-card ${isLarge ? 'post-card-large' : ''} ${thumbnail ? '
 @media (max-width: 700px) {
   .post-card {
     flex: 1 1 100%;
-    height: 70vw;
+    height: 49vw;
   }
 }
 

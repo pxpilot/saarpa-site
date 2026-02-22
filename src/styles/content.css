@@ -33,7 +33,7 @@ production stylesheet in assets/built/screen.css using gulp dev
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 13vw 0;
+  padding: 2rem 0 1.5rem;
   max-width: 70%;
   margin: auto;
   text-align: center;

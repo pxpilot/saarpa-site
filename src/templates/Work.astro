@@ -12,14 +12,14 @@ interface Props {
 const { entry, next, prev, baseSlug } = Astro.props;
 const { Content } = await entry.render();
 
-const { title, description, thumbnail } = entry.data;
+const { title, description, thumbnail, video } = entry.data;
 
 // Icons logic (replacing SVG imports with inline or similar)
 // For simplicity, using text or simple arrows.
 ---
 
 <Layout title={title} description={description}>
-  <article class={`post-content ${thumbnail ? '' : 'no-image'}`}>
+  <article class={`post-content ${(thumbnail || video) ? '' : 'no-image'}`}>
     {/* Title hidden as it is shown in the header now
     <header class="post-content-header">
       <h1 class="post-content-title">{title}</h1>
@@ -33,6 +33,12 @@ const { title, description, thumbnail } = entry.data;
     {thumbnail && (
       <div class="post-content-image">
         <img src={thumbnail} class="kg-image" alt={title} />
+      </div>
+    )}
+
+    {video && (
+      <div class="post-content-image">
+        <video src={video} controls playsinline class="kg-image" style="width:100%;height:auto;" />
       </div>
     )}
 

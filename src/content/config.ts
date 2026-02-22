@@ -5,6 +5,7 @@ const commonSchema = z.object({
   description: z.string().optional(),
   date: z.date().optional(),
   thumbnail: z.string().optional(),
+  video: z.string().optional(),
   templateKey: z.string().optional(),
   // Add other fields as discovered
   image: z.string().optional(),

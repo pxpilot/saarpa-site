@@ -4,17 +4,23 @@ import Layout from '../layouts/Layout.astro';
 
 <Layout title="Saar Paamoni" description="Product advisor, artist, builder.">
     <div class="home-hero">
-        <div class="home-hero-content">
-            <h1 class="home-title">Saar Paamoni</h1>
-            <p class="home-tagline">Product leader. Artist. Builder. Dad. Surfer.</p>
-            <p class="home-bio">
-                10 years building measurement infrastructure at scale. Now advising
-                founders and operators — and making art somewhere in between.
-            </p>
-            <div class="home-ctas">
-                <a href="/consulting" class="btn btn-primary">Work with me</a>
-                <a href="/art" class="btn btn-secondary">View my art</a>
+        <div class="hero-image-wrap">
+            <img src="/img/homepage-me2.png" alt="Saar Paamoni" class="hero-img" />
+            <div class="hero-overlay">
+                <p class="hero-text">
+                    <span>Hey, I'm Saar – a dad, creator, artist,</span>
+                    <span>and surfer with a passion for</span>
+                    <span>art, tech, and music.</span>
+                    <span class="hero-spacer"></span>
+                    <span>As a value-driven Product Manager,</span>
+                    <span>I bring creativity and purpose to</span>
+                    <span>everything I do.</span>
+                </p>
             </div>
+        </div>
+        <div class="home-ctas">
+            <a href="/consulting" class="btn btn-primary">Work with me</a>
+            <a href="/art" class="btn btn-secondary">View my art</a>
         </div>
     </div>
 
@@ -50,47 +56,80 @@ import Layout from '../layouts/Layout.astro';
 
 <style>
 .home-hero {
-    min-height: 70vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ── Triptych image — break out of site-wrapper padding ── */
+.hero-image-wrap {
+    position: relative;
+    width: calc(100% + 6vw);
+    margin-left: -3vw;
+    margin-right: -3vw;
+    line-height: 0;
+}
+
+@media (max-width: 850px) {
+    .hero-image-wrap {
+        width: calc(100% + 12vw);
+        margin-left: -6vw;
+        margin-right: -6vw;
+    }
+}
+
+.hero-img {
+    width: 100%;
+    height: 26.5vw;
+    display: block;
+    object-fit: cover;
+}
+
+/* ── Text overlay ── */
+.hero-overlay {
+    position: absolute;
+    inset: 0;
     display: flex;
     align-items: center;
-    padding: 6rem var(--margin) 4rem;
-    max-width: 900px;
-    margin: 0 auto;
+    justify-content: center;
+    padding: 0 4%;
+    pointer-events: none;
 }
 
-.home-title {
-    font-family: var(--font-sans-serif);
-    font-variant: small-caps;
-    font-size: clamp(3rem, 8vw, 7rem);
-    font-weight: var(--font-light);
-    letter-spacing: 0.05em;
-    color: var(--color-base);
-    margin: 0 0 0.5rem;
-    line-height: 1;
+.hero-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin: 0;
 }
 
-.home-tagline {
+.hero-text span {
+    display: inline;
     font-family: var(--font-serif);
     font-style: italic;
-    font-size: 2.4rem;
-    color: var(--color-primary);
-    margin: 0 0 1.5rem;
+    font-size: clamp(1.4rem, 2.8vw, 2.8rem);
+    line-height: 1.75;
+    color: #1a1210;
+    background: rgba(255, 248, 241, 0.88);
+    padding: 0.1em 0.45em;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+    margin-bottom: 0.2em;
+    width: fit-content;
 }
 
-.home-bio {
-    font-family: var(--font-serif);
-    font-size: 2rem;
-    line-height: 1.7;
-    color: var(--color-base);
-    max-width: 600px;
-    margin: 0 0 2.5rem;
-    opacity: 0.85;
+.hero-spacer {
+    display: block !important;
+    background: transparent !important;
+    height: 0.6em;
+    padding: 0 !important;
+    margin-bottom: 0 !important;
 }
 
 .home-ctas {
     display: flex;
     gap: 1rem;
     flex-wrap: wrap;
+    padding: 2.5rem var(--margin) 0;
 }
 
 .btn {
