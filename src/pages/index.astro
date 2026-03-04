@@ -53,10 +53,9 @@ import Layout from '../layouts/Layout.astro';
 <style>
 /* ── Hero ── */
 .home-hero {
-    min-height: 80vh;
     display: flex;
-    align-items: center;
-    padding: 6rem var(--margin);
+    align-items: flex-start;
+    padding: 4rem var(--margin) 2rem;
 }
 
 .hero-inner {
@@ -133,10 +132,11 @@ import Layout from '../layouts/Layout.astro';
 
 /* ── Cards ── */
 .home-section {
-    padding: 4rem var(--margin) 6rem;
+    padding: 2rem var(--margin) 6rem;
     border-top: 1px solid var(--color-border);
     backdrop-filter: blur(2px);
     background: rgba(255, 248, 241, 0.6);
+    margin-top: 50px;
 }
 
 [data-theme="dark"] .home-section {
