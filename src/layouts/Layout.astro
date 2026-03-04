@@ -10,10 +10,11 @@ import Footer from "../components/Footer.astro";
 export interface Props {
     title?: string;
     description?: string;
+    backgroundVideo?: string;
     children?: any;
 }
 
-const { title, description } = Astro.props;
+const { title, description, backgroundVideo } = Astro.props;
 ---
 
 <!doctype html>
@@ -44,7 +45,20 @@ const { title, description } = Astro.props;
             }
         </script>
     </head>
-    <body class="site-wrapper">
+    <body class={`site-wrapper${backgroundVideo ? ' has-video-bg' : ''}`}>
+        {backgroundVideo && (
+            <div class="video-bg-wrap">
+                <video
+                    class="video-bg"
+                    src={backgroundVideo}
+                    autoplay
+                    muted
+                    loop
+                    playsinline
+                />
+                <div class="video-bg-overlay" />
+            </div>
+        )}
         <Header title={title} />
 
         <main id="site-main" class="site-main">

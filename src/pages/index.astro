@@ -2,25 +2,20 @@
 import Layout from '../layouts/Layout.astro';
 ---
 
-<Layout title="Saar Paamoni" description="Product advisor, artist, builder.">
+<Layout title="Saar Paamoni" description="Product advisor, artist, builder." backgroundVideo="/video/home.mov">
     <div class="home-hero">
-        <div class="hero-image-wrap">
-            <img src="/img/homepage-me2.png" alt="Saar Paamoni" class="hero-img" />
-            <div class="hero-overlay">
-                <p class="hero-text">
-                    <span>Hey, I'm Saar – a dad, creator, artist,</span>
-                    <span>and surfer with a passion for</span>
-                    <span>art, tech, and music.</span>
-                    <span class="hero-spacer"></span>
-                    <span>As a value-driven Product Manager,</span>
-                    <span>I bring creativity and purpose to</span>
-                    <span>everything I do.</span>
-                </p>
+        <div class="hero-inner">
+            <p class="hero-label">Saar Paamoni</p>
+            <h1 class="hero-headline">
+                Product builder.<br />Artist. Surfer.
+            </h1>
+            <p class="hero-sub">
+                I help founders figure out what to build, and why it matters.
+            </p>
+            <div class="hero-ctas">
+                <a href="/consulting" class="btn btn-primary">Work with me</a>
+                <a href="/art" class="btn btn-secondary">View my art</a>
             </div>
-        </div>
-        <div class="home-ctas">
-            <a href="/consulting" class="btn btn-primary">Work with me</a>
-            <a href="/art" class="btn btn-secondary">View my art</a>
         </div>
     </div>
 
@@ -29,24 +24,25 @@ import Layout from '../layouts/Layout.astro';
             <div class="home-card">
                 <span class="home-card-label">Currently building</span>
                 <p class="home-card-text">
-                    Exploring how AI is reshaping the relationship between attention,
-                    reach, and impact across media. Stealth for now.
+                    Something at the intersection of AI and media measurement.
+                    The old ways of tracking attention are breaking — I'm working
+                    on what comes next.
                 </p>
                 <a href="/consulting" class="home-card-link">Learn more →</a>
             </div>
             <div class="home-card">
                 <span class="home-card-label">Art</span>
                 <p class="home-card-text">
-                    Acrylic on canvas. Painting is how I think without language —
-                    bold strokes, warm palettes, textures that take time.
+                    Acrylic on canvas. Bold marks, warm palettes, textures
+                    that took time. This is how I think without words.
                 </p>
                 <a href="/art" class="home-card-link">View gallery →</a>
             </div>
             <div class="home-card">
                 <span class="home-card-label">Writing</span>
                 <p class="home-card-text">
-                    Notes on product, AI, media, and what I'm figuring out
-                    in public.
+                    Product, AI, media, and whatever I'm working through
+                    loudly enough to write down.
                 </p>
                 <a href="/blog" class="home-card-link">Read posts →</a>
             </div>
@@ -55,81 +51,51 @@ import Layout from '../layouts/Layout.astro';
 </Layout>
 
 <style>
+/* ── Hero ── */
 .home-hero {
-    display: flex;
-    flex-direction: column;
-}
-
-/* ── Triptych image — break out of site-wrapper padding ── */
-.hero-image-wrap {
-    position: relative;
-    width: calc(100% + 6vw);
-    margin-left: -3vw;
-    margin-right: -3vw;
-    line-height: 0;
-}
-
-@media (max-width: 850px) {
-    .hero-image-wrap {
-        width: calc(100% + 12vw);
-        margin-left: -6vw;
-        margin-right: -6vw;
-    }
-}
-
-.hero-img {
-    width: 100%;
-    height: 26.5vw;
-    display: block;
-    object-fit: cover;
-}
-
-/* ── Text overlay ── */
-.hero-overlay {
-    position: absolute;
-    inset: 0;
+    min-height: 80vh;
     display: flex;
     align-items: center;
-    justify-content: center;
-    padding: 0 4%;
-    pointer-events: none;
+    padding: 6rem var(--margin);
 }
 
-.hero-text {
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-    margin: 0;
+.hero-inner {
+    max-width: 680px;
 }
 
-.hero-text span {
-    display: inline;
+.hero-label {
+    font-family: var(--font-sans-serif);
+    font-size: 1.1rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--color-primary);
+    margin: 0 0 0.35rem;
+}
+
+.hero-headline {
+    font-family: var(--font-sans-serif);
+    font-weight: 300;
+    font-size: clamp(3.5rem, 7vw, 7rem);
+    line-height: 1.05;
+    letter-spacing: 0.01em;
+    color: var(--color-base);
+    margin: 0 0 0.5rem;
+}
+
+.hero-sub {
     font-family: var(--font-serif);
-    font-style: italic;
-    font-size: clamp(1.4rem, 2.8vw, 2.8rem);
-    line-height: 1.75;
-    color: #1a1210;
-    background: rgba(255, 248, 241, 0.88);
-    padding: 0.1em 0.45em;
-    -webkit-box-decoration-break: clone;
-    box-decoration-break: clone;
-    margin-bottom: 0.2em;
-    width: fit-content;
+    font-size: clamp(1.6rem, 2vw, 2rem);
+    line-height: 1.65;
+    color: var(--color-base);
+    opacity: 0.75;
+    max-width: 480px;
+    margin: 0 0 3rem;
 }
 
-.hero-spacer {
-    display: block !important;
-    background: transparent !important;
-    height: 0.6em;
-    padding: 0 !important;
-    margin-bottom: 0 !important;
-}
-
-.home-ctas {
+.hero-ctas {
     display: flex;
     gap: 1rem;
     flex-wrap: wrap;
-    padding: 2.5rem var(--margin) 0;
 }
 
 .btn {
@@ -165,9 +131,16 @@ import Layout from '../layouts/Layout.astro';
     color: var(--color-primary);
 }
 
+/* ── Cards ── */
 .home-section {
-    padding: 2rem var(--margin) 6rem;
+    padding: 4rem var(--margin) 6rem;
     border-top: 1px solid var(--color-border);
+    backdrop-filter: blur(2px);
+    background: rgba(255, 248, 241, 0.6);
+}
+
+[data-theme="dark"] .home-section {
+    background: rgba(26, 18, 16, 0.6);
 }
 
 .home-section-inner {
@@ -195,8 +168,8 @@ import Layout from '../layouts/Layout.astro';
 
 .home-card-text {
     font-family: var(--font-serif);
-    font-size: 1.7rem;
-    line-height: 1.6;
+    font-size: 1.9rem;
+    line-height: 1.75;
     color: var(--color-base);
     margin: 0 0 1rem;
 }
@@ -211,5 +184,13 @@ import Layout from '../layouts/Layout.astro';
 
 .home-card-link:hover {
     text-decoration: underline;
+}
+
+/* ── Mobile ── */
+@media (max-width: 600px) {
+    .home-hero {
+        min-height: 70vh;
+        padding: 4rem var(--margin);
+    }
 }
 </style>

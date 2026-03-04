@@ -12,13 +12,17 @@ interface Props {
 const { entry, next, prev, baseSlug } = Astro.props;
 const { Content } = await entry.render();
 
-const { title, description, thumbnail, video } = entry.data;
+const { title, description, thumbnail, video, date } = entry.data;
+const formattedDate = date ? new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'long' }) : null;
 
 // Icons logic (replacing SVG imports with inline or similar)
 // For simplicity, using text or simple arrows.
 ---
 
 <Layout title={title} description={description}>
+  <div class="post-back-wrap">
+    <a href={`/${baseSlug}`} class="post-back">← Back</a>
+  </div>
   <article class={`post-content ${(thumbnail || video) ? '' : 'no-image'}`}>
     {/* Title hidden as it is shown in the header now
     <header class="post-content-header">
@@ -28,6 +32,10 @@ const { title, description, thumbnail, video } = entry.data;
 
     {description && (
       <p class="post-content-excerpt">{description}</p>
+    )}
+
+    {formattedDate && (
+      <p class="post-content-date">{formattedDate}</p>
     )}
 
     {thumbnail && (
@@ -65,3 +73,26 @@ const { title, description, thumbnail, video } = entry.data;
 
   </article>
 </Layout>
+
+<style>
+.post-back-wrap {
+  padding: 1.5rem var(--margin) 0;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.post-back {
+  font-family: var(--font-sans-serif);
+  font-size: 1.3rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+  text-decoration: none;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.post-back:hover {
+  opacity: 1;
+}
+</style>

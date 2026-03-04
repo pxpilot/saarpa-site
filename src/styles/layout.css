@@ -1,3 +1,39 @@
+/* ── Video background ── */
+.video-bg-wrap {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+}
+
+.video-bg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+.video-bg-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 248, 241, 0.55);
+}
+
+[data-theme="dark"] .video-bg-overlay {
+    background: rgba(26, 18, 16, 0.65);
+}
+
+/* When video bg is active, make sections transparent so video shows through */
+.has-video-bg .home-section,
+.has-video-bg .about-body,
+.has-video-bg .consulting-hero,
+.has-video-bg .consulting-services,
+.has-video-bg .consulting-background,
+.has-video-bg .consulting-stealth,
+.has-video-bg .consulting-contact {
+    background: transparent;
+}
+
 /* Global Styles */
 body {
     font-family: var(--font-serif);
