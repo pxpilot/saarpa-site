@@ -2,9 +2,11 @@
 import Layout from '../layouts/Layout.astro';
 ---
 
-<Layout title="About" description="Saar Paamoni — Product leader, artist, surfer, builder, dad." backgroundVideo="/video/about.mov">
+<Layout title="About" description="Saar Paamoni — Product leader, artist, surfer, builder, dad.">
     <article class="post-content no-image">
-        <div class="post-content-body about-body">
+        <div class="about-body">
+            <img src="/img/about-portrait.jpg" alt="Saar Paamoni" class="about-float-photo" />
+
             <h1 class="about-title">About</h1>
 
             <p class="about-lead">
@@ -52,13 +54,21 @@ import Layout from '../layouts/Layout.astro';
 </Layout>
 
 <style>
+.about-float-photo {
+    float: right;
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    object-position: center 20%;
+    border-radius: var(--radius);
+    margin: 0.5rem 0 2rem 3rem;
+    border: 1px solid var(--color-border);
+}
+
 .about-body {
     max-width: 640px;
     margin: 0 auto;
     padding: 4rem var(--margin);
-    position: relative;
-    background: rgba(255, 248, 241, 0.6);
-    backdrop-filter: blur(2px);
 }
 
 .about-title {
@@ -99,10 +109,6 @@ import Layout from '../layouts/Layout.astro';
     text-transform: lowercase;
 }
 
-[data-theme="dark"] .about-body {
-    background: rgba(26, 18, 16, 0.6);
-}
-
 .about-links {
     display: flex;
     gap: 2rem;
@@ -122,5 +128,15 @@ import Layout from '../layouts/Layout.astro';
 
 .about-links a:hover {
     text-decoration: underline;
+}
+
+@media (max-width: 500px) {
+    .about-float-photo {
+        float: none;
+        display: block;
+        width: 140px;
+        height: 140px;
+        margin: 0 0 2rem 0;
+    }
 }
 </style>
