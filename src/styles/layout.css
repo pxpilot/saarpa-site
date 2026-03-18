@@ -235,6 +235,12 @@ footer.site-foot a {
     width: 100%;
 }
 
+@media (max-width: 1050px) and (min-width: 851px) {
+    .site-head-center {
+        display: none;
+    }
+}
+
 .site-head-logo {
     font-family: var(--font-sans-serif);
     flex-shrink: 0;
