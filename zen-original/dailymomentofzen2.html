@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram Photos</title>
+    <style>
+        .photo {
+            margin: 10px;
+            display: inline-block;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <div id="photos"></div>
+
+    <script>
+const fetchHashtagId = async (hashtag, accessToken) => {
+    const endpoint = `https://graph.facebook.com/v12.0/ig_hashtag_search?user_id=25427489056894500&q=${hashtag}&access_token=${accessToken}`;
+    try {
+        const response = await fetch(endpoint);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        return data.data[0].id;
+    } catch (error) {
+        console.error('Error fetching hashtag ID:', error);
+        throw error;
+    }
+};
+
+const fetchMediaByHashtag = async (hashtagId, accessToken) => {
+    const endpoint = `https://graph.facebook.com/v12.0/${hashtagId}/top_media?user_id=25427489056894500&fields=id,caption,media_type,media_url,permalink&access_token=${accessToken}`;
+    try {
+        const response = await fetch(endpoint);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        return data.data;
+    } catch (error) {
+        console.error('Error fetching media by hashtag:', error);
+        throw error;
+    }
+};
+
+const displayPhotos = (photos) => {
+    const photosContainer = document.getElementById('photos');
+    photosContainer.innerHTML = ''; // Clear previous photos
+    photos.forEach(photo => {
+        if (photo.media_type === 'IMAGE' || photo.media_type === 'CAROUSEL_ALBUM') {
+            const photoDiv = document.createElement('div');
+            photoDiv.className = 'photo';
+
+            const img = document.createElement('img');
+            img.src = photo.media_url;
+            img.alt = photo.caption || 'Instagram Photo';
+
+            const caption = document.createElement('p');
+            caption.textContent = photo.caption || '';
+
+            photoDiv.appendChild(img);
+            photoDiv.appendChild(caption);
+            photosContainer.appendChild(photoDiv);
+        }
+    });
+};
+
+const main = async (hashtag) => {
+    const accessToken = 'IGQWRNQXRabnZA3cmt1cHQxUEswc1NBWWd3TDZArMXpWT2FUYVVpdVZAqaUJ1RG82Yy1QMloyWE9sZAVVGM08waS1OUXd0eUxSNnFwUUxPZAFBOeDVCVy0xWHhBS0NNS0ZAMNGtoakdFdHJlckRIZAwZDZD'; // Replace with your access token
+    try {
+        const hashtagId = await fetchHashtagId(hashtag, accessToken);
+        const photos = await fetchMediaByHashtag(hashtagId, accessToken);
+        displayPhotos(photos);
+    } catch (error) {
+        console.error('An error occurred:', error);
+    }
+};
+
+// Execute the main function with the desired hashtag
+main('dailymomentofzen'); // Replace 'yourHashtag' with the actual hashtag you want to search
+
+
+    </script>
+</body>
+</html>

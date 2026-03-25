@@ -1,0 +1,232 @@
+---
+const ACCESS_TOKEN = import.meta.env.PUBLIC_INSTAGRAM_ACCESS_TOKEN;
+const USER_ID = import.meta.env.PUBLIC_INSTAGRAM_USER_ID;
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Daily Zen Moment — Saar Paamoni</title>
+    <meta name="description" content="A rotating gallery of zen moments." />
+    <style>
+        *, *::before, *::after { box-sizing: border-box; }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: #000;
+        }
+
+        #photos {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+        }
+
+        .photo {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .photo img,
+        .photo video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: opacity 1s ease-in-out;
+        }
+
+        #title {
+            position: absolute;
+            bottom: 1.5rem;
+            left: 1.5rem;
+            z-index: 3;
+            font-family: helvetica, sans-serif;
+            font-size: 1rem;
+            font-weight: lighter;
+            color: rgba(255, 245, 230, 0.8);
+            pointer-events: none;
+            line-height: 1.4;
+        }
+
+        #home-link {
+            position: absolute;
+            top: 1.25rem;
+            left: 1.5rem;
+            z-index: 3;
+            font-family: helvetica, sans-serif;
+            font-size: 0.75rem;
+            font-weight: normal;
+            color: rgba(255, 245, 230, 0.6);
+            text-decoration: none;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            transition: color 0.2s;
+        }
+
+        #home-link:hover {
+            color: rgba(255, 245, 230, 1);
+        }
+
+        #loading {
+            position: absolute;
+            inset: 0;
+            z-index: 4;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #111;
+            color: rgba(255, 245, 230, 0.5);
+            font-family: helvetica, sans-serif;
+            font-size: 0.875rem;
+            font-weight: lighter;
+            letter-spacing: 0.15em;
+        }
+    </style>
+</head>
+<body>
+    <a id="home-link" href="/">saarpa.com</a>
+    <div id="loading">loading&hellip;</div>
+    <div id="photos"></div>
+    <div id="title">Daily<br/>Zen<br/>Moment</div>
+
+    <script define:vars={{ ACCESS_TOKEN, USER_ID }}>
+        const ENDPOINT = `https://graph.instagram.com/${USER_ID}/media?fields=id,media_type,media_url,caption&access_token=${ACCESS_TOKEN}&limit=100`;
+
+        let allPhotos = [];
+        let displayedPhotos = new Set();
+
+        async function fetchInstagramPhotos(url = ENDPOINT) {
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    console.error('Failed to fetch photos:', response.status);
+                    return allPhotos;
+                }
+                const data = await response.json();
+                allPhotos = allPhotos.concat(data.data);
+                if (data.paging && data.paging.next) {
+                    return fetchInstagramPhotos(data.paging.next);
+                }
+                return allPhotos;
+            } catch (error) {
+                console.error('Error fetching Instagram photos:', error);
+                return allPhotos;
+            }
+        }
+
+        function getRandomSpan() {
+            return [1, 2, 3][Math.floor(Math.random() * 3)];
+        }
+
+        function createMediaElement(photo) {
+            if (photo.media_type === 'IMAGE') {
+                const img = document.createElement('img');
+                img.src = photo.media_url;
+                img.alt = photo.caption || 'Zen moment';
+                return img;
+            } else if (photo.media_type === 'VIDEO') {
+                const video = document.createElement('video');
+                video.src = photo.media_url;
+                video.autoplay = true;
+                video.loop = true;
+                video.muted = true;
+                video.playsInline = true;
+                return video;
+            }
+            return null;
+        }
+
+        function getRandomSubset(array, size) {
+            const shuffled = array.slice().sort(() => 0.5 - Math.random());
+            const selected = shuffled.slice(0, Math.min(size, shuffled.length));
+            selected.forEach(item => displayedPhotos.add(item.id));
+            return selected;
+        }
+
+        function replaceRandomPhoto(container, photos) {
+            const photoDivs = container.getElementsByClassName('photo');
+            if (photoDivs.length === 0) return;
+
+            const available = photos.filter(p => !displayedPhotos.has(p.id));
+            if (available.length === 0) return;
+
+            const randomPhoto = available[Math.floor(Math.random() * available.length)];
+            const randomIndex = Math.floor(Math.random() * photoDivs.length);
+            const targetDiv = photoDivs[randomIndex];
+            const mediaElement = targetDiv.querySelector('img, video');
+
+            if (!mediaElement) return;
+
+            displayedPhotos.delete(targetDiv.dataset.photoId);
+            displayedPhotos.add(randomPhoto.id);
+            targetDiv.dataset.photoId = randomPhoto.id;
+
+            mediaElement.style.opacity = '0';
+            setTimeout(() => {
+                const newMedia = createMediaElement(randomPhoto);
+                if (newMedia) {
+                    targetDiv.replaceChild(newMedia, mediaElement);
+                    newMedia.style.opacity = '1';
+                }
+            }, 1000);
+        }
+
+        function displayPhotos(photos) {
+            const container = document.getElementById('photos');
+            const loading = document.getElementById('loading');
+
+            const filtered = photos.filter(p =>
+                (p.media_type === 'IMAGE' || p.media_type === 'VIDEO') &&
+                p.caption && p.caption.toLowerCase().includes('zen')
+            );
+
+            if (filtered.length === 0) {
+                if (loading) loading.textContent = 'no zen photos found';
+                return;
+            }
+
+            const toShow = getRandomSubset(filtered, 22);
+            container.innerHTML = '';
+
+            toShow.forEach(photo => {
+                const div = document.createElement('div');
+                div.className = 'photo';
+                div.style.gridColumn = `span ${getRandomSpan()}`;
+                div.style.gridRow = `span ${getRandomSpan()}`;
+                div.dataset.photoId = photo.id;
+
+                const media = createMediaElement(photo);
+                if (media) {
+                    div.appendChild(media);
+                    container.appendChild(div);
+                }
+            });
+
+            if (loading) loading.style.display = 'none';
+
+            setInterval(() => replaceRandomPhoto(container, filtered), 3000);
+        }
+
+        async function main() {
+            const photos = await fetchInstagramPhotos();
+            displayPhotos(photos);
+        }
+
+        main();
+    </script>
+</body>
+</html>

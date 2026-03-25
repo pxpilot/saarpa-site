@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram Photos</title>
+<style>
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+#photos {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2 columns */
+    grid-template-rows: repeat(2, 1fr); /* 2 rows */
+    gap: 10px;
+    width: 100%;
+    height: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    overflow-y: hidden;
+}
+
+.photo {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    transition: opacity 1s ease-in-out;
+}
+
+.photo img, .photo video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: opacity 1s ease-in-out;
+}
+#title {
+    font-family: helvetica;
+    font-size: 240px;
+    font-weight: lighter;
+    color: slategray;
+}
+</style>
+
+</head>
+<body>
+    <div id="photos"><span id="title">Daily Zen Moment</span></div>
+<script>
+
+const ACCESS_TOKEN = 'IGQWRNQXRabnZA3cmt1cHQxUEswc1NBWWd3TDZArMXpWT2FUYVVpdVZAqaUJ1RG82Yy1QMloyWE9sZAVVGM08waS1OUXd0eUxSNnFwUUxPZAFBOeDVCVy0xWHhBS0NNS0ZAMNGtoakdFdHJlckRIZAwZDZD';
+const USER_ID = '25427489056894500';
+const ENDPOINT = `https://graph.instagram.com/${USER_ID}/media?fields=id,media_type,media_url,caption&access_token=${ACCESS_TOKEN}&limit=100`;
+
+let allPhotos = [];
+let displayedPhotos = new Set();
+
+async function fetchInstagramPhotos(url = ENDPOINT) {
+    try {
+        const response = await fetch(url);
+        if (response.ok) {
+            const data = await response.json();
+            allPhotos = allPhotos.concat(data.data);
+
+            if (data.paging && data.paging.next) {
+                return fetchInstagramPhotos(data.paging.next);
+            } else {
+                return allPhotos;
+            }
+        } else {
+            console.error('Failed to fetch photos');
+            return allPhotos;
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        return allPhotos;
+    }
+}
+
+function displayPhotos(photos) {
+    const photosContainer = document.getElementById('photos');
+    photosContainer.innerHTML = ''; // Clear previous photos
+
+    const filteredPhotos = photos.filter(photo => (photo.media_type === 'IMAGE' || photo.media_type === 'VIDEO') && photo.caption && photo.caption.toLowerCase().includes('zen'));
+    const photosToShow = getRandomSubset(filteredPhotos, 4); // Display 4 photos
+
+    photosToShow.forEach(photo => {
+        const photoDiv = document.createElement('div');
+        photoDiv.className = 'photo';
+        photoDiv.dataset.photoId = photo.id;
+
+        if (photo.media_type === 'IMAGE') {
+            const img = document.createElement('img');
+            img.src = photo.media_url;
+            img.alt = photo.caption || 'Instagram Photo';
+            photoDiv.appendChild(img);
+        } else if (photo.media_type === 'VIDEO') {
+            const video = document.createElement('video');
+            video.src = photo.media_url;
+            video.controls = true;
+            video.autoplay = true;
+            video.loop = true;
+            video.muted = true;
+            photoDiv.appendChild(video);
+        }
+
+        photosContainer.appendChild(photoDiv);
+        displayedPhotos.add(photo.id);
+    });
+
+    setInterval(() => replaceRandomPhoto(photosContainer, filteredPhotos), 3000); // Replace every 3 seconds
+}
+
+function getRandomSubset(array, size) {
+    const shuffled = array.slice().sort(() => 0.5 - Math.random());
+    const selected = shuffled.slice(0, size);
+    selected.forEach(item => displayedPhotos.add(item.id));
+    return selected;
+}
+
+function replaceRandomPhoto(container, photos) {
+    const photoDivs = container.getElementsByClassName('photo');
+    if (photoDivs.length > 0) {
+        const randomIndex = Math.floor(Math.random() * photoDivs.length);
+        let randomPhoto;
+        do {
+            randomPhoto = photos[Math.floor(Math.random() * photos.length)];
+        } while (displayedPhotos.has(randomPhoto.id));
+
+        const mediaElement = photoDivs[randomIndex].querySelector('img, video');
+        
+        displayedPhotos.delete(photoDivs[randomIndex].dataset.photoId);
+        displayedPhotos.add(randomPhoto.id);
+        photoDivs[randomIndex].dataset.photoId = randomPhoto.id;
+
+        mediaElement.style.opacity = 0;
+
+        setTimeout(() => {
+            if (randomPhoto.media_type === 'IMAGE') {
+                const img = document.createElement('img');
+                img.src = randomPhoto.media_url;
+                img.alt = randomPhoto.caption || 'Instagram Photo';
+                photoDivs[randomIndex].replaceChild(img, mediaElement);
+            } else if (randomPhoto.media_type === 'VIDEO') {
+                const video = document.createElement('video');
+                video.src = randomPhoto.media_url;
+                video.controls = true;
+                video.autoplay = true;
+                video.loop = true;
+                video.muted = true;
+                photoDivs[randomIndex].replaceChild(video, mediaElement);
+            }
+
+            mediaElement.style.opacity = 1;
+        }, 1000); // Duration of the fade out/in effect
+    }
+}
+
+async function main() {
+    const photos = await fetchInstagramPhotos();
+    displayPhotos(photos);
+}
+
+main();
+
+
+    </script>
+</body>
+</html>
