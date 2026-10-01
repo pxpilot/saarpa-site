@@ -1,6 +1,6 @@
 ---
 templateKey: work-sub-page
-hidden: true
+number: 5.5
 title: "The Pink Elephant in the Room"
 description: Site-specific installation. Fabric, metal.
 date: 2026-01-01T00:00:00.000Z

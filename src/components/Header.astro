@@ -14,7 +14,7 @@ const links = [
     { href: '/about', label: 'About' },
     { href: '/art', label: 'Art' },
     { href: '/consulting', label: 'Consulting' },
-    { href: '/zen', label: 'Zen' },
+    { href: '/zen', label: 'Zen', disabled: true }, // greyed out until the Zen page works
     { href: '/contact', label: 'Contact' },
 ];
 ---
@@ -29,9 +29,9 @@ const links = [
         </a>
         <nav id="swup" class="site-head-left">
             <ul class="nav" role="menu">
-                {links.map(({ href, label }) => (
-                    <li class={`nav-home${isCurrent(href) ? ' nav-current' : ''}`} role="menuitem">
-                        <a href={href} aria-current={isCurrent(href) ? 'page' : undefined}>{label}</a>
+                {links.map(({ href, label, disabled }: { href: string; label: string; disabled?: boolean }) => (
+                    <li class={`nav-home${isCurrent(href) ? ' nav-current' : ''}${disabled ? ' nav-disabled' : ''}`} role="menuitem">
+                        <a href={disabled ? undefined : href} aria-disabled={disabled ? 'true' : undefined} title={disabled ? 'Coming soon' : undefined} aria-current={isCurrent(href) ? 'page' : undefined}>{label}</a>
                     </li>
                 ))}
             </ul>
@@ -67,5 +67,11 @@ const links = [
         height: 2px;
         border-radius: 2px;
         background: var(--color-primary);
+    }
+    /* Greyed-out nav item (page not ready yet): grey and not clickable */
+    .nav-disabled a {
+        color: rgba(140, 140, 140, 0.55) !important;
+        cursor: default;
+        pointer-events: none;
     }
 </style>
