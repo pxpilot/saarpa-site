@@ -1,0 +1,122 @@
+---
+// Variation 3 of the Art page: the strip look, but mixed.
+// Strips of different widths, heights and crops, sliding past each other like a collage.
+import Layout from '../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+const works = (await getCollection('work')).sort((a, b) =>
+  new Date(b.data.date || 0).getTime() - new Date(a.data.date || 0).getTime()
+);
+
+// Deterministic "random" rhythm so the layout is stable between reloads.
+const widths  = [64, 32, 41, 55, 100, 27, 70, 47, 49, 36, 60];
+const heights = [11, 7, 15, 9, 6, 13, 8, 12, 10, 5, 14];   // in vw
+const posX    = [20, 80, 50, 10, 65, 35, 90, 45, 0, 75, 30]; // background crop %
+const posY    = [40, 25, 70, 50, 15, 85, 35, 60, 45, 20, 55];
+const shift   = [0, 2.5, 0.5, 3.5, 0, 1.5, 4, 0.8, 2.8, 0, 1.8]; // vertical drift in vw (flows, no overlap)
+const pick = (arr: number[], i: number) => arr[i % arr.length];
+---
+
+<Layout title="Art" description="Paintings, machines and installations by Saar Paamoni.">
+  <header class="page-head">
+    <h2 class="page-head-title">Art</h2>
+  </header>
+
+  <section class="mix">
+    {works.map((w, i) => {
+      const style = [
+        `--w:${pick(widths, i)}%`,
+        `--h:${pick(heights, i)}vw`,
+        `--y:${pick(shift, i)}vw`,
+        `--i:${i}`,
+        w.data.thumbnail ? `background-image:url(${w.data.thumbnail})` : '',
+        `background-position:${pick(posX, i)}% ${pick(posY, i)}%`,
+      ].join(';');
+      return (
+        <a href={`/art/${w.slug}`} class="strip" style={style}>
+          {w.data.video && (
+            <video src={w.data.video} autoplay muted loop playsinline
+              style={`object-position:${pick(posX, i)}% ${pick(posY, i)}%`} />
+          )}
+          <span class="strip-title">{w.data.title}</span>
+        </a>
+      );
+    })}
+  </section>
+</Layout>
+
+<style>
+  .mix {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 1.4vw;
+    padding: 1rem 2vw 6rem;
+  }
+
+  .strip {
+    position: relative;
+    flex: 1 1 var(--w);
+    min-width: 18%;
+    height: var(--h);
+    min-height: 56px;
+    margin-top: var(--y);
+    background: #161210 center / cover no-repeat;
+    border-radius: 6px;
+    overflow: hidden;
+    text-decoration: none;
+    opacity: 0;
+    animation: slide 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+    animation-delay: calc(var(--i) * 60ms);
+    transition: height 0.5s cubic-bezier(0.2, 0.7, 0.2, 1), filter 0.4s ease;
+  }
+  /* alternate strips slide in from opposite sides */
+  .strip:nth-child(odd)  { --from: -24px; }
+  .strip:nth-child(even) { --from: 24px; }
+  @keyframes slide {
+    from { opacity: 0; translate: var(--from) 0; }
+    to   { opacity: 1; translate: 0 0; }
+  }
+
+  .strip video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* hovering one strip opens it up and quiets the rest */
+  .mix:hover .strip { filter: saturate(0.6) brightness(0.8); }
+  .mix .strip:hover {
+    filter: none;
+    height: calc(var(--h) * 1.8);
+    z-index: 2;
+  }
+
+  .strip-title {
+    position: absolute;
+    left: 1.6rem;
+    bottom: 1.2rem;
+    font-family: var(--font-sans-serif);
+    font-variant: small-caps;
+    text-transform: lowercase;
+    font-weight: 300;
+    font-size: 2.2rem;
+    letter-spacing: 0.06em;
+    color: #fff;
+    text-shadow: 0 0 8px rgba(0, 0, 0, 0.8);
+    opacity: 0;
+    translate: 0 6px;
+    transition: opacity 0.3s ease, translate 0.3s ease;
+  }
+  .strip:hover .strip-title { opacity: 1; translate: 0 0; }
+
+  @media (max-width: 700px) {
+    .strip { flex-basis: 100%; height: calc(var(--h) * 3); margin-top: 0; }
+    .strip-title { opacity: 1; translate: 0 0; font-size: 1.8rem; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .strip { animation: none; opacity: 1; transition: none; }
+  }
+</style>

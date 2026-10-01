@@ -1,5 +1,6 @@
 ---
 templateKey: work-sub-page
+number: 8
 title: "Untitled 4"
 description: Acrylic on canvas.
 date: 2024-01-03T00:00:00.000Z

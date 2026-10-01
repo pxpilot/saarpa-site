@@ -1,10 +1,12 @@
 ---
-// Art page: a salon-style wall.
+// Variation of the Art page: a salon-style wall.
 // Works keep their own proportions and carry a small museum label underneath.
-import Layout from '../../layouts/Layout.astro';
-import { getWorks } from '../../lib/works';
+import Layout from '../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
 
-const works = await getWorks();
+const works = (await getCollection('work')).sort((a, b) =>
+  new Date(b.data.date || 0).getTime() - new Date(a.data.date || 0).getTime()
+);
 
 const year = (d?: Date) => (d ? new Date(d).getFullYear() : null);
 const medium = (desc?: string) => (desc ? desc.replace(/\.$/, '') : null);
@@ -21,8 +23,8 @@ const medium = (desc?: string) => (desc ? desc.replace(/\.$/, '') : null);
       <a href={`/art/${w.slug}`} class="piece" style={`--i:${i}`}>
         <figure>
           <div class="frame">
-            {(w.data.teaser || w.data.video) ? (
-              <video src={w.data.teaser || w.data.video} poster={w.data.thumbnail} autoplay muted loop playsinline />
+            {w.data.video ? (
+              <video src={w.data.video} autoplay muted loop playsinline />
             ) : w.data.thumbnail ? (
               <img src={w.data.thumbnail} alt={w.data.title} loading="lazy" />
             ) : (

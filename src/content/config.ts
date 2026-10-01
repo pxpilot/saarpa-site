@@ -12,7 +12,10 @@ const commonSchema = z.object({
   featuredimage: z.string().optional(),
   heading: z.string().optional(),
   subheading: z.string().optional(),
-  number: z.number().optional(),
+  number: z.number().optional(),     // order on the Art page (1 = first)
+  hidden: z.boolean().optional(),    // keep the page, leave it out of the gallery
+  teaser: z.string().optional(),     // short video used on the gallery card
+  videos: z.array(z.string()).optional(), // extra videos shown in the row after `video`
   pagetype: z.array(z.string()).optional(),
 }).partial();
 

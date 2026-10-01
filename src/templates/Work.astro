@@ -13,6 +13,8 @@ const { entry, next, prev, baseSlug } = Astro.props;
 const { Content } = await entry.render();
 
 const { title, description, thumbnail, video, date } = entry.data;
+// All videos for this work, shown side by side in one row that scrolls to the right.
+const allVideos = [video, ...((entry.data as any).videos ?? [])].filter(Boolean) as string[];
 const formattedDate = date ? new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'long' }) : null;
 
 // Icons logic (replacing SVG imports with inline or similar)
@@ -38,15 +40,20 @@ const formattedDate = date ? new Date(date).toLocaleDateString('en-US', { year: 
       <p class="post-content-date">{formattedDate}</p>
     )}
 
-    {thumbnail && (
-      <div class="post-content-image">
-        <img src={thumbnail} class="kg-image" alt={title} />
+    {allVideos.length > 0 && (
+      <div class="video-row-wrap">
+        <div class="video-row">
+          {allVideos.map((src) => (
+            <video src={src} autoplay muted loop playsinline controls preload="auto" />
+          ))}
+        </div>
+        {allVideos.length > 1 && <p class="video-row-hint">scroll →</p>}
       </div>
     )}
 
-    {video && (
+    {thumbnail && (
       <div class="post-content-image">
-        <video src={video} controls playsinline class="kg-image" style="width:100%;height:auto;" />
+        <img src={thumbnail} class="kg-image" alt={title} />
       </div>
     )}
 
@@ -74,7 +81,61 @@ const formattedDate = date ? new Date(date).toLocaleDateString('en-US', { year: 
   </article>
 </Layout>
 
+<script>
+  // The page wrapper (#swup) has a transform, which traps position:fixed inside it,
+  // so the pinned button is a copy placed directly on <body>.
+  function initBackPin() {
+    const btn = document.querySelector<HTMLAnchorElement>('.post-back');
+    const wrap = document.querySelector<HTMLElement>('.post-back-wrap');
+    document.querySelectorAll('.post-back-float').forEach((n) => n.remove());
+    const w = window as any;
+    if (w.__backPin) window.removeEventListener('scroll', w.__backPin);
+    if (!btn || !wrap) return;
+
+    const float = btn.cloneNode(true) as HTMLAnchorElement;
+    float.classList.add('post-back-float');
+    document.body.appendChild(float);
+
+    const update = () => {
+      float.classList.toggle('is-visible', wrap.getBoundingClientRect().bottom < 0);
+    };
+    w.__backPin = update;
+    window.addEventListener('scroll', update, { passive: true });
+    update();
+  }
+  // Video row: fit the videos to the space left in the window, and let the mouse wheel scroll it sideways.
+  function initVideoRow() {
+    const row = document.querySelector<HTMLElement>('.video-row');
+    if (!row) return;
+    const hint = document.querySelector<HTMLElement>('.video-row-hint');
+    const fit = () => {
+      const top = row.getBoundingClientRect().top + window.scrollY;
+      const h = Math.max(320, window.innerHeight - top - 56);
+      row.style.setProperty('--row-h', `${h}px`);
+      if (hint) hint.style.visibility = row.scrollWidth > row.clientWidth + 4 ? 'visible' : 'hidden';
+    };
+    fit();
+    window.addEventListener('resize', fit);
+    row.querySelectorAll('video').forEach((v) => v.addEventListener('loadedmetadata', fit));
+    row.addEventListener('wheel', (e) => {
+      if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
+      const max = row.scrollWidth - row.clientWidth;
+      const goingRight = e.deltaY > 0;
+      if ((goingRight && row.scrollLeft < max - 1) || (!goingRight && row.scrollLeft > 0)) {
+        e.preventDefault();
+        row.scrollLeft += e.deltaY;
+      }
+    }, { passive: false });
+  }
+
+  initVideoRow();
+  document.addEventListener('astro:page-load', initVideoRow);
+  initBackPin(); // first load (the page-load event may fire before this script runs)
+  document.addEventListener('astro:page-load', initBackPin); // later in-site navigations
+</script>
+
 <style>
+/* Back button: a highlighted pill; once it scrolls away, a pinned copy appears top-left. */
 .post-back-wrap {
   padding: 1.5rem var(--margin) 0;
   max-width: 1200px;
@@ -82,17 +143,87 @@ const formattedDate = date ? new Date(date).toLocaleDateString('en-US', { year: 
 }
 
 .post-back {
+  pointer-events: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.9rem 1.8rem;
+  border-radius: 999px;
+  background: var(--color-primary);
+  color: var(--color-bg);
   font-family: var(--font-sans-serif);
   font-size: 1.3rem;
-  letter-spacing: 0.08em;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  box-shadow: 0 6px 18px -6px rgba(60, 20, 25, 0.45);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Videos: one row, sized to the window height, scrolling to the right */
+.video-row-wrap {
+  width: 100vw;
+  margin: 2rem 0 3rem calc(50% - 50vw);
+}
+.video-row {
+  --row-h: 72vh;
+  display: flex;
+  gap: 2rem;
+  height: var(--row-h);
+  padding: 0 var(--margin);
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x proximity;
+  scroll-padding: 0 var(--margin);
+  scrollbar-width: thin;
+}
+.video-row::after { content: ''; flex: 0 0 1px; } /* keeps right padding at the end */
+.video-row video {
+  flex: 0 0 auto;
+  height: 100%;
+  width: auto;
+  max-width: none;
+  border-radius: 4px;
+  background: #000;
+  scroll-snap-align: start;
+  box-shadow: 0 12px 28px -14px rgba(60, 40, 30, 0.4);
+}
+.video-row-hint {
+  margin: 0.8rem var(--margin) 0;
+  text-align: right;
+  font-family: var(--font-sans-serif);
+  font-size: 1.2rem;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--color-primary);
-  text-decoration: none;
-  opacity: 0.7;
-  transition: opacity 0.2s ease;
+  visibility: hidden;
+}
+
+/* the pinned copy lives on <body>, outside this component's scope */
+:global(.post-back-float) {
+  position: fixed;
+  top: 1.6rem;
+  left: var(--margin);
+  z-index: 50;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-10px);
+  transition: opacity 0.25s ease, transform 0.25s ease, box-shadow 0.2s ease;
+}
+:global(.post-back-float.is-visible) {
+  opacity: 1;
+  pointer-events: auto;
+  transform: none;
 }
 
 .post-back:hover {
-  opacity: 1;
+  transform: translateX(-3px);
+  box-shadow: 0 10px 24px -8px rgba(60, 20, 25, 0.55);
+}
+
+.post-back:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
 }
 </style>

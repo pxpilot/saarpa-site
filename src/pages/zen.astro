@@ -104,7 +104,7 @@ const USER_ID = import.meta.env.PUBLIC_INSTAGRAM_USER_ID;
     <div id="title">Daily<br/>Zen<br/>Moment</div>
 
     <script define:vars={{ ACCESS_TOKEN, USER_ID }}>
-        const ENDPOINT = `https://graph.instagram.com/${USER_ID}/media?fields=id,media_type,media_url,caption&access_token=${ACCESS_TOKEN}&limit=100`;
+        const ENDPOINT = `https://graph.facebook.com/v25.0/${USER_ID}/media?fields=id,media_type,media_url,caption&access_token=${ACCESS_TOKEN}&limit=100`;
 
         let allPhotos = [];
         let displayedPhotos = new Set();
