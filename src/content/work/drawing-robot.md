@@ -1,6 +1,6 @@
 ---
 templateKey: work-sub-page
-title: "Untitled (drawing robot)"
+title: "Drawbot"
 description: Motorized drawing device, markers and paint on canvas.
 number: 3
 thumbnail: /art/drawing-robot-1.jpg

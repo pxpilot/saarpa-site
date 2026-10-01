@@ -1,6 +1,6 @@
 ---
 templateKey: work-sub-page
-title: "Untitled (glass column)"
+title: "המגדל"
 description: Installation. Glass, ping-pong balls, light.
 number: 5
 teaser: /art/glass-column.mp4

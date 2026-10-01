@@ -1,6 +1,6 @@
 ---
 templateKey: work-sub-page
-title: "Untitled (ironing boards)"
+title: "עגל הזהב"
 description: Sculpture. Ironing boards, metal. End of Year Exhibition, HaMidrasha, Beit Berl.
 date: 2026-06-01T00:00:00.000Z
 number: 4

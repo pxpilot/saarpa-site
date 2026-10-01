@@ -15,6 +15,7 @@ const commonSchema = z.object({
   number: z.number().optional(),     // order on the Art page (1 = first)
   hidden: z.boolean().optional(),    // keep the page, leave it out of the gallery
   teaser: z.string().optional(),     // short video used on the gallery card
+  poster: z.string().optional(),     // still image shown before the gallery video plays
   videos: z.array(z.string()).optional(), // extra videos shown in the row after `video`
   pagetype: z.array(z.string()).optional(),
 }).partial();

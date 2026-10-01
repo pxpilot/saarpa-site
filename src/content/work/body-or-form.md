@@ -5,6 +5,7 @@ description: Interactive projection installation. Visitors' bodies become point 
 date: 2026-09-01T00:00:00.000Z
 number: 1
 teaser: /art/body-or-form-teaser.mp4
+poster: /art/body-or-form-poster.jpg
 video: /art/body-or-form.mp4
 videos:
   - /art/body-or-form-dancer.mp4
