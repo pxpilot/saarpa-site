@@ -129,10 +129,21 @@ const { title, description, backgroundVideo } = Astro.props;
                 }
             }
 
+            // Browsers don't auto-start a video that arrives through a page
+            // change without reload (e.g. the home page wave), so start them here.
+            function startAutoplayVideos() {
+                document.querySelectorAll("video[autoplay]").forEach((el) => {
+                    const v = el as HTMLVideoElement;
+                    v.muted = true;
+                    if (v.paused) v.play().catch(() => {});
+                });
+            }
+
             // Run on view transitions (fires on initial load too)
             document.addEventListener("astro:page-load", () => {
                 initNav();
                 initTheme();
+                startAutoplayVideos();
             });
 
             // Re-apply theme on swap to prevent flash?
